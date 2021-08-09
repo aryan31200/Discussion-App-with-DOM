@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <title>
+            Discussion App
+        </title>
+        <meta charset="UTF-8" />
+        <link rel="stylesheet" href="src/styles.css">
+        <link href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <header><h1>Discussion Portal</h1></header>
+        <div id="container">           
+            <div id="left-block">
+                <div id="search-box">
+                    <button onclick="newQuestion()" id="new-ques">New Question form</button>
+                    <input type="text" id="ques_name" placeholder="Search questions...">
+                </div>
+                <div id="question-list">
+                    
+                </div>
+            </div>
+            <div id="right-block">
+                <div id="question-form">
+                    <h1>Welcome to Discussion Portal !</h1>
+                    <span>Enter a subject and question to get started</span>
+                    <input type="text" id="ques_topic" placeholder="Subject">
+                    <textarea id="ques_ques" placeholder="Question"></textarea>
+                    <div id="button_container">
+                        <button onclick="submitQuestion()" id="submit">Submit</button>
+                    </div>
+                </div>
+                <div id="questions_and_answers">
+                    <p style="font-size: large; margin: 0;">Question: </p>
+                    <div class="question_and_description">
+                        <h2></h2>
+                        <span></span>
+                    </div>
+                    <div id="button_container">
+                        <button style="margin-top: 10px;" onclick="" id="resolve">Resolve</button>
+                    </div>
+                    <p style="font-size: large; margin: 0;">Response: </p>
+                    <div class="answer_list">
+
+                    </div>
+                    <p style="font-size: large; margin: 30px auto 0px auto;">Add Response: </p>
+                    <input type="text" id="answerer_name" placeholder="Enter Name">
+                    <textarea id="ques_ques" placeholder="Question"></textarea>
+                    <div id="button_container">
+                        <button onclick="submitAnswer(this)" id="submit-answer">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>  
+        <script src="src/script.js"></script>
+    </body>
+</html>
