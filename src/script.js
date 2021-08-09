@@ -4,7 +4,6 @@ var quesArr = [];
 if(data){
     data = JSON.parse(data);
     var quesArr = [...data];
-    // forEach()
 }
 quesArr.push = function() { 
     Array.prototype.push.apply(this, arguments); 
@@ -15,18 +14,23 @@ quesArr.pop = function() {
     processQ();
 }
 
-console.log(quesArr)
+//console.log(quesArr)
 
 function submitQuestion() {
     var question = document.getElementById("ques_topic").value;
     var ques_desc = document.getElementById("ques_ques").value;
-    var quesObject = {
-        Question: question,
-        Description: ques_desc,
-        Answers: []
+    if(question != "" && ques_desc != "") {
+        var quesObject = {
+            Question: question,
+            Description: ques_desc,
+            Answers: []
+        }
+        quesArr.push(quesObject);
+        localStorage.setItem("questions", JSON.stringify(quesArr));
+    } else {
+        alert("Please enter a Subject and your Question!");
     }
-    quesArr.push(quesObject);
-    localStorage.setItem("questions", JSON.stringify(quesArr));
+    
     document.getElementById("ques_topic").value = "";
     document.getElementById("ques_ques").value = "";  
 }
@@ -75,7 +79,7 @@ function changeColor(index) {
     var questionsList = document.querySelector("#question-list").children;
     quesArr.forEach((element, i)=> {
         if(i == index) {
-            questionsList[index].style.color = "black";
+            questionsList[i].style.color = "black";
         } else {
             questionsList[i].style.color = "gray";
         }
@@ -94,6 +98,7 @@ function openQuestion(index) {
     question.querySelector("span").innerText = object.Description;
     question.style.color = "black";
     question.style.border = "none";
+    question.style.cursor = "default";
 
     var ansArr = object.Answers;
     ansArr.push = function() {
@@ -133,16 +138,16 @@ function showResponses(index) {
 function submitAnswer(some) {
     // console.log(this.event.target.parentElement.parentElement.querySelector(".question_and_description").querySelector("h2").innerText);
     // var question = this.event.target.pare
-    console.log(some);
+    //console.log(some);
     var parent = some.parentElement.parentElement;
-    console.log([...parent.children].filter(node => node.className == "question_and_description")[0].querySelector("h2"))
+    //console.log([...parent.children].filter(node => node.className == "question_and_description")[0].querySelector("h2"))
     var ques = [...parent.children].filter(node => node.className == "question_and_description")[0].querySelector("h2").innerText;
     var i;
     quesArr.forEach((element, index) => {
         if(element.Question === ques) {
             var name = parent.querySelector("input").value;
             var ans = parent.querySelector("textarea").value;
-            if(name != null && ans != null) {
+            if(name != "" && ans != "") {
                 var ansObj = {
                     Name: name,
                     Answer: ans
@@ -172,4 +177,42 @@ function newQuestion() {
     })
     document.getElementById("questions_and_answers").style.display = "none";
     document.getElementById("question-form").style.display="block";
+}
+
+function removeQuestion(some) {
+    var parent = some.parentElement.parentElement;
+    var ques = [...parent.children].filter(node => node.className == "question_and_description")[0].querySelector("h2").innerText;
+    var index;
+    for(var i = 0; i < quesArr.length; i++) {
+        if(quesArr[i].Question === ques) {
+            index = i;
+            break;
+        }
+    }
+
+    quesArr.splice(index, 1);
+    removeQuestionList();
+    updataQuestionList();
+    document.getElementById("questions_and_answers").style.display = "none";
+    document.getElementById("question-form").style.display="block";
+    localStorage.setItem("questions", JSON.stringify(quesArr));
+}
+
+function searchQuestion(element) {
+    var query = element.value.toUpperCase();
+    if(query == null) {
+        removeQuestion
+        updataQuestionList();
+    } else {
+        var question_list = document.getElementById("question-list");
+        for(var i = 0; i < quesArr.length; i++) {
+            a = quesArr[i].Question;
+            txtValue = a;
+            if (txtValue.toUpperCase().indexOf(query) > -1) {
+                question_list.children[i].style.display = "";
+            } else {
+                question_list.children[i].style.display = "none";
+            }
+        }
+    }
 }
