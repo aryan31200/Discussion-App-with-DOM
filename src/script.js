@@ -33,6 +33,7 @@ function submitQuestion() {
     
     document.getElementById("ques_topic").value = "";
     document.getElementById("ques_ques").value = "";  
+    document.getElementById("ques_name").value = "";
 }
 
 function processQ() {
@@ -86,13 +87,11 @@ function changeColor(index) {
     })
 }
 
-//openQuestion(0);
 function openQuestion(index) {
     document.getElementById("question-form").style.display="none";
     var page = document.getElementById("questions_and_answers");
     page.style.display="block";
     var object = quesArr[index];
-    // console.log(object);
     var question = page.querySelector(".question_and_description");
     question.querySelector("h2").innerText = object.Question;
     question.querySelector("span").innerText = object.Description;
@@ -110,9 +109,6 @@ function openQuestion(index) {
 
 function showResponses(index) {
     var responseList = document.querySelector(".answer_list");
-    // while(responseList.firstChild) {
-    //     responseList.remove(responseList.firstChild);
-    // }
     var ansArr = quesArr[index].Answers;
     if(ansArr != null) {
         ansArr.forEach((element)=> {
@@ -136,11 +132,7 @@ function showResponses(index) {
 }
 
 function submitAnswer(some) {
-    // console.log(this.event.target.parentElement.parentElement.querySelector(".question_and_description").querySelector("h2").innerText);
-    // var question = this.event.target.pare
-    //console.log(some);
     var parent = some.parentElement.parentElement;
-    //console.log([...parent.children].filter(node => node.className == "question_and_description")[0].querySelector("h2"))
     var ques = [...parent.children].filter(node => node.className == "question_and_description")[0].querySelector("h2").innerText;
     var i;
     quesArr.forEach((element, index) => {
@@ -177,6 +169,9 @@ function newQuestion() {
     })
     document.getElementById("questions_and_answers").style.display = "none";
     document.getElementById("question-form").style.display="block";
+    removeQuestionList();
+    updataQuestionList();
+    document.getElementById("ques_name").value = "";
 }
 
 function removeQuestion(some) {
@@ -189,19 +184,19 @@ function removeQuestion(some) {
             break;
         }
     }
-
     quesArr.splice(index, 1);
     removeQuestionList();
     updataQuestionList();
     document.getElementById("questions_and_answers").style.display = "none";
     document.getElementById("question-form").style.display="block";
+    document.getElementById("ques_name").value = "";
     localStorage.setItem("questions", JSON.stringify(quesArr));
 }
 
 function searchQuestion(element) {
     var query = element.value.toUpperCase();
     if(query == null) {
-        removeQuestion
+        removeQuestionList();
         updataQuestionList();
     } else {
         var question_list = document.getElementById("question-list");
@@ -209,10 +204,37 @@ function searchQuestion(element) {
             a = quesArr[i].Question;
             txtValue = a;
             if (txtValue.toUpperCase().indexOf(query) > -1) {
+                removeNoMatchFound();
                 question_list.children[i].style.display = "";
             } else {
                 question_list.children[i].style.display = "none";
             }
         }
+        checkIfAnyElement();
+    }
+}
+
+function checkIfAnyElement() {
+    var question_list = document.getElementById("question-list");
+    if(question_list.children[question_list.children.length - 1].className === "no_match_found") return;
+    var itr = 0;
+    for(; itr < question_list.children.length; itr++) {
+        if(question_list.children[itr].style.display !== "none") {
+            break;
+        } 
+    }    
+    if(itr === question_list.children.length) {
+        var newNode = document.createElement("h2");
+        newNode.appendChild(document.createTextNode("No match found"));
+        newNode.classList.add("no_match_found");
+        question_list.appendChild(newNode);
+    }
+}
+
+function removeNoMatchFound() {
+    var question_list = document.getElementById("question-list");
+    var toRemove = question_list.querySelector(".no_match_found");
+    if(toRemove) {
+        question_list.removeChild(toRemove);
     }
 }
